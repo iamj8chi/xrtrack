@@ -84,8 +84,15 @@ class ARImageTracker {
     const overlayPlane = document.querySelector("#overlay-plane");
 
     if (overlayPlane) {
-      // Sin animaciones - mostrar la imagen directamente
+      // Remover cualquier animación existente
+      overlayPlane.removeAttribute("animation");
+      overlayPlane.removeAttribute("animation__rotation");
+      overlayPlane.removeAttribute("animation__click");
+      overlayPlane.removeAttribute("animation__scale");
+      
+      // Mostrar la imagen directamente sin animaciones
       overlayPlane.setAttribute("scale", "1 1 1");
+      overlayPlane.setAttribute("rotation", "0 0 0");
     }
 
     // Activar retroalimentación háptica si está disponible
@@ -96,7 +103,13 @@ class ARImageTracker {
     const overlayPlane = document.querySelector("#overlay-plane");
 
     if (overlayPlane) {
-      // Sin animaciones - ocultar la imagen directamente
+      // Remover cualquier animación existente
+      overlayPlane.removeAttribute("animation");
+      overlayPlane.removeAttribute("animation__rotation");
+      overlayPlane.removeAttribute("animation__click");
+      overlayPlane.removeAttribute("animation__scale");
+      
+      // Ocultar la imagen directamente sin animaciones
       overlayPlane.setAttribute("scale", "0 0 0");
     }
   }
@@ -106,7 +119,16 @@ class ARImageTracker {
 
     console.log("¡Overlay clickeado!");
 
-    // Sin animaciones de click - solo retroalimentación háptica
+    const overlayPlane = document.querySelector("#overlay-plane");
+    if (overlayPlane) {
+      // Asegurarse de que no hay animaciones al hacer click
+      overlayPlane.removeAttribute("animation");
+      overlayPlane.removeAttribute("animation__rotation");
+      overlayPlane.removeAttribute("animation__click");
+      overlayPlane.removeAttribute("animation__scale");
+    }
+
+    // Solo retroalimentación háptica, sin animaciones
     this.triggerHapticFeedback();
 
     // Manejador de click personalizado - agrega tu lógica aquí
