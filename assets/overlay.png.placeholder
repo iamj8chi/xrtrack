@@ -1,0 +1,12 @@
+/* 
+ * PLACEHOLDER FILE - REPLACE WITH ACTUAL PNG IMAGE
+ * 
+ * This file represents where your overlay.png should be placed.
+ * 
+ * To use this AR application:
+ * 1. Replace this file with your actual PNG overlay image
+ * 2. Create a targets.mind file using the MindAR compiler tool
+ * 3. Serve the project using a web server
+ * 
+ * For now, you can use any PNG image as overlay.png for testing.
+ */

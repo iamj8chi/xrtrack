@@ -1,0 +1,168 @@
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: #000;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Loading Screen */
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    color: white;
+    font-size: 1.2em;
+}
+
+/* UI Overlays */
+.ui-overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    z-index: 100;
+    font-size: 1.1em;
+    text-align: center;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ui-overlay.error {
+    background: rgba(255, 0, 0, 0.8);
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Scanning Animation */
+.scanning-animation {
+    width: 80px;
+    height: 80px;
+    border: 3px solid transparent;
+    border-top: 3px solid #00ff88;
+    border-right: 3px solid #00ff88;
+    border-radius: 50%;
+    animation: scan 2s ease-in-out infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes scan {
+    0%, 100% {
+        transform: rotate(0deg) scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: rotate(180deg) scale(1.1);
+        opacity: 0.7;
+    }
+}
+
+/* A-Frame Scene Styling */
+a-scene {
+    width: 100vw;
+    height: 100vh;
+    background: transparent;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .ui-overlay {
+        padding: 1.5rem;
+        font-size: 1em;
+        margin: 0 1rem;
+        max-width: calc(100% - 2rem);
+    }
+    
+    #loading-screen {
+        font-size: 1em;
+    }
+    
+    .loading-spinner {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .scanning-animation {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+/* Performance Optimizations */
+* {
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+/* Hide A-Frame VR/Enter AR buttons */
+.a-enter-vr-button,
+.a-enter-ar-button {
+    display: none !important;
+}
+
+/* Custom AR Button (if needed) */
+.ar-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #00ff88;
+    color: #000;
+    border: none;
+    padding: 15px 20px;
+    border-radius: 30px;
+    font-weight: bold;
+    z-index: 200;
+    display: none;
+    cursor: pointer;
+    font-size: 1em;
+    box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+    transition: all 0.3s ease;
+}
+
+.ar-button:hover {
+    background: #00cc6a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 255, 136, 0.4);
+}
+
+.ar-button:active {
+    transform: translateY(0);
+}
