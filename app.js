@@ -33,12 +33,15 @@ class ARImageTracker {
     this.scene = document.querySelector("a-scene");
     this.targetEntity = document.querySelector("#target-entity");
     const overlayPlane = document.querySelector("#overlay-plane");
-    
+
     // Verificar que la imagen se carga correctamente
     const overlayImage = document.querySelector("#overlay-image");
     if (overlayImage) {
       overlayImage.onload = () => {
-        console.log("✅ Imagen overlay cargada correctamente:", overlayImage.src);
+        console.log(
+          "✅ Imagen overlay cargada correctamente:",
+          overlayImage.src
+        );
       };
       overlayImage.onerror = () => {
         console.error("❌ Error al cargar imagen overlay:", overlayImage.src);
@@ -106,7 +109,7 @@ class ARImageTracker {
       overlayPlane.setAttribute("scale", "1 1 1");
       overlayPlane.setAttribute("rotation", "0 0 0");
       overlayPlane.setAttribute("visible", "true");
-      
+
       console.log("Imagen overlay configurada - escala: 1 1 1, visible: true");
     } else {
       console.error("No se encontró el elemento overlay-plane!");
@@ -130,7 +133,7 @@ class ARImageTracker {
       // Ocultar la imagen directamente sin animaciones
       overlayPlane.setAttribute("scale", "0 0 0");
       overlayPlane.setAttribute("visible", "false");
-      
+
       console.log("Imagen overlay ocultada");
     }
   }
