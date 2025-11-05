@@ -30,7 +30,9 @@ An augmented reality web application that uses MindAR library to track image tar
 You need to prepare two key assets:
 
 #### 1. Target Images → targets.mind
+
 1. Prepare your target image(s):
+
    - High contrast, detailed images work best
    - Avoid repetitive patterns
    - Recommended size: 480x640px
@@ -43,12 +45,14 @@ You need to prepare two key assets:
    - Place it in `assets/` directory as `targets.mind`
 
 #### 2. Overlay Image
+
 - Replace `assets/overlay.png` with your desired overlay image
 - Recommended: PNG with transparency, 512x512 or 1024x1024px
 
 ## 🖥️ Local Development
 
 ### Using Python (if installed)
+
 ```bash
 # Navigate to project directory
 cd path/to/MathiasXR
@@ -62,6 +66,7 @@ python -m SimpleHTTPServer 8000
 ```
 
 ### Using Node.js (if installed)
+
 ```bash
 # Install a simple server
 npm install -g http-server
@@ -74,6 +79,7 @@ http-server -p 8000
 ```
 
 ### Using VS Code Live Server Extension
+
 1. Install "Live Server" extension in VS Code
 2. Right-click on `index.html`
 3. Select "Open with Live Server"
@@ -89,29 +95,29 @@ http-server -p 8000
 ## 🛠️ Customization
 
 ### Changing the Overlay
+
 - Replace `assets/overlay.png` with your image
 - Modify overlay properties in `index.html`:
   ```html
-  <a-plane 
-      src="#overlay-image"
-      height="0.552"
-      width="1"
-      position="0 0 0">
+  <a-plane src="#overlay-image" height="0.552" width="1" position="0 0 0">
   </a-plane>
   ```
 
 ### Adding Animations
+
 Modify the animation properties in `app.js`:
+
 ```javascript
-overlayPlane.setAttribute('animation__rotation', {
-    property: 'rotation',
-    to: '0 360 0',
-    dur: 5000,
-    loop: true
+overlayPlane.setAttribute("animation__rotation", {
+  property: "rotation",
+  to: "0 360 0",
+  dur: 5000,
+  loop: true,
 });
 ```
 
 ### Styling
+
 - Edit `styles.css` to change UI appearance
 - Modify loading screens, scanning indicators, etc.
 
@@ -134,17 +140,20 @@ MathiasXR/
 ## 🔧 Technical Details
 
 ### Dependencies
+
 - **A-Frame**: 3D/VR framework
 - **MindAR**: Image tracking library
 - **Modern Browser**: WebGL and camera support required
 
 ### Browser Compatibility
+
 - Chrome 67+ (Android/Desktop)
 - Safari 11.1+ (iOS)
 - Firefox 67+ (Android/Desktop)
 - Edge 79+
 
 ### Performance Tips
+
 - Use high-quality target images
 - Optimize overlay image file sizes
 - Test in good lighting conditions
@@ -153,17 +162,20 @@ MathiasXR/
 ## 🐛 Troubleshooting
 
 ### Camera Access Issues
+
 - Ensure HTTPS (required for camera access)
 - Check browser permissions
 - Try refreshing the page
 
 ### Target Not Detected
+
 - Ensure good lighting
 - Check target image quality
 - Verify `targets.mind` file is properly compiled
 - Try different viewing angles/distances
 
 ### Performance Issues
+
 - Reduce overlay image file size
 - Close other browser tabs
 - Ensure device has sufficient processing power
@@ -179,6 +191,7 @@ Contributions are welcome! Please feel free to submit issues and pull requests.
 ## 📞 Support
 
 For questions or issues:
+
 1. Check the troubleshooting section above
 2. Review MindAR documentation: https://hiukim.github.io/mind-ar-js-doc/
 3. Check A-Frame documentation: https://aframe.io/docs/

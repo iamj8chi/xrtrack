@@ -1,71 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MathiasXR - AR Image Tracking</title>
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
     <div id="loading-screen">
-        <div class="loading-spinner"></div>
-        <p>Loading AR Experience...</p>
+      <div class="loading-spinner"></div>
+      <p>Loading AR Experience...</p>
     </div>
 
-    <a-scene 
-        mindar-image="imageTargetSrc: ./assets/targets.mind; 
+    <a-scene
+      mindar-image="imageTargetSrc: ./assets/targets.mind; 
                       showStats: false; 
                       uiScanning: #scanning; 
                       uiLoading: #loading; 
                       uiError: #error"
-        color-space="sRGB" 
-        renderer="colorManagement: true, physicallyCorrectLights" 
-        vr-mode-ui="enabled: false" 
-        device-orientation-permission-ui="enabled: false">
-        
-        <!-- Assets -->
-        <a-assets>
-            <img id="overlay-image" src="./assets/overlay.png" />
-        </a-assets>
+      color-space="sRGB"
+      renderer="colorManagement: true, physicallyCorrectLights"
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: false"
+    >
+      <!-- Assets -->
+      <a-assets>
+        <img id="overlay-image" src="./assets/overlay.png" />
+      </a-assets>
 
-        <!-- Camera -->
-        <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;"
-                  raycaster="far: 10000; objects: .clickable"></a-camera>
+      <!-- Camera -->
+      <a-camera
+        position="0 0 0"
+        look-controls="enabled: false"
+        cursor="fuse: false; rayOrigin: mouse;"
+        raycaster="far: 10000; objects: .clickable"
+      ></a-camera>
 
-        <!-- AR Target Entity -->
-        <a-entity id="target-entity" mindar-image-target="targetIndex: 0">
-            <!-- PNG Overlay -->
-            <a-plane 
-                id="overlay-plane"
-                src="#overlay-image"
-                position="0 0 0"
-                height="0.552"
-                width="1"
-                rotation="0 0 0"
-                transparent="true"
-                material="alphaTest: 0.5"
-                animation="property: rotation; to: 0 360 0; dur: 5000; loop: true">
-            </a-plane>
-        </a-entity>
+      <!-- AR Target Entity -->
+      <a-entity id="target-entity" mindar-image-target="targetIndex: 0">
+        <!-- PNG Overlay -->
+        <a-plane
+          id="overlay-plane"
+          src="#overlay-image"
+          position="0 0 0"
+          height="0.552"
+          width="1"
+          rotation="0 0 0"
+          transparent="true"
+          material="alphaTest: 0.5"
+          animation="property: rotation; to: 0 360 0; dur: 5000; loop: true"
+        >
+        </a-plane>
+      </a-entity>
     </a-scene>
 
     <!-- UI Elements -->
     <div id="scanning" class="ui-overlay">
-        <div class="scanning-animation"></div>
-        <p>Point your camera at the target image</p>
+      <div class="scanning-animation"></div>
+      <p>Point your camera at the target image</p>
     </div>
 
     <div id="loading" class="ui-overlay">
-        <div class="loading-spinner"></div>
-        <p>Loading...</p>
+      <div class="loading-spinner"></div>
+      <p>Loading...</p>
     </div>
 
     <div id="error" class="ui-overlay error">
-        <p>Failed to start AR. Please check your camera permissions.</p>
+      <p>Failed to start AR. Please check your camera permissions.</p>
     </div>
 
     <script src="app.js"></script>
-</body>
+  </body>
 </html>

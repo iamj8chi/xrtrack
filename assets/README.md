@@ -5,15 +5,18 @@ This directory contains the assets needed for the AR image tracking application.
 ## Required Files
 
 ### 1. targets.mind
-This file contains the compiled image targets for MindAR. 
+
+This file contains the compiled image targets for MindAR.
 
 **To create this file:**
+
 1. Go to https://hiukim.github.io/mind-ar-js-doc/tools/compile
-2. Upload your target image(s) 
+2. Upload your target image(s)
 3. Download the generated `.mind` file
 4. Place it in this `assets/` directory as `targets.mind`
 
 **Requirements for target images:**
+
 - High contrast
 - Rich in details/textures
 - Avoid repetitive patterns
@@ -22,9 +25,11 @@ This file contains the compiled image targets for MindAR.
 - Good lighting and sharp focus
 
 ### 2. overlay.png
+
 This is the PNG image that will be displayed over the tracked target.
 
 **Requirements:**
+
 - PNG format with transparency support
 - Recommended size: 512x512 or 1024x1024
 - Keep file size reasonable for web loading
