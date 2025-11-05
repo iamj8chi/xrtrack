@@ -1,4 +1,4 @@
-// MathiasXR - AR Image Tracking Application
+// MathiasXR - Aplicación de Seguimiento de Imágenes AR
 class ARImageTracker {
   constructor() {
     this.isInitialized = false;
@@ -10,7 +10,7 @@ class ARImageTracker {
   }
 
   async init() {
-    console.log("Initializing MathiasXR AR Image Tracker...");
+    console.log("Inicializando MathiasXR AR Image Tracker...");
 
     // Wait for A-Frame to be ready
     this.waitForAFrame().then(() => {
@@ -34,28 +34,28 @@ class ARImageTracker {
     this.targetEntity = document.querySelector("#target-entity");
     const overlayPlane = document.querySelector("#overlay-plane");
 
-    // MindAR Events
+    // Eventos MindAR
     this.scene.addEventListener("arReady", () => {
-      console.log("AR Ready");
+      console.log("AR Listo");
       this.isInitialized = true;
       this.hideUIElement("#loading");
     });
 
     this.scene.addEventListener("arError", (event) => {
-      console.error("AR Error:", event);
+      console.error("Error AR:", event);
       this.showUIElement("#error");
     });
 
-    // Target tracking events
+    // Eventos de seguimiento de objetivo
     this.targetEntity.addEventListener("targetFound", () => {
-      console.log("Target found!");
+      console.log("¡Objetivo encontrado!");
       this.targetFound = true;
       this.hideUIElement("#scanning");
       this.onTargetFound();
     });
 
     this.targetEntity.addEventListener("targetLost", () => {
-      console.log("Target lost!");
+      console.log("¡Objetivo perdido!");
       this.targetFound = false;
       this.showUIElement("#scanning");
       this.onTargetLost();
@@ -84,28 +84,11 @@ class ARImageTracker {
     const overlayPlane = document.querySelector("#overlay-plane");
 
     if (overlayPlane) {
-      // Add entrance animation
-      overlayPlane.setAttribute("animation", {
-        property: "scale",
-        from: "0 0 0",
-        to: "1 1 1",
-        dur: 500,
-        easing: "easeOutElastic",
-      });
-
-      // Start rotation animation
-      setTimeout(() => {
-        overlayPlane.setAttribute("animation__rotation", {
-          property: "rotation",
-          to: "0 360 0",
-          dur: 5000,
-          loop: true,
-          easing: "linear",
-        });
-      }, 500);
+      // Sin animaciones - mostrar la imagen directamente
+      overlayPlane.setAttribute("scale", "1 1 1");
     }
 
-    // Trigger haptic feedback if available
+    // Activar retroalimentación háptica si está disponible
     this.triggerHapticFeedback();
   }
 
@@ -113,48 +96,27 @@ class ARImageTracker {
     const overlayPlane = document.querySelector("#overlay-plane");
 
     if (overlayPlane) {
-      // Stop animations
-      overlayPlane.removeAttribute("animation__rotation");
-
-      // Add exit animation
-      overlayPlane.setAttribute("animation", {
-        property: "scale",
-        from: "1 1 1",
-        to: "0 0 0",
-        dur: 300,
-        easing: "easeInQuart",
-      });
+      // Sin animaciones - ocultar la imagen directamente
+      overlayPlane.setAttribute("scale", "0 0 0");
     }
   }
 
   onOverlayClick() {
     if (!this.targetFound) return;
 
-    console.log("Overlay clicked!");
+    console.log("¡Overlay clickeado!");
 
-    const overlayPlane = document.querySelector("#overlay-plane");
-
-    // Add click animation
-    overlayPlane.setAttribute("animation__click", {
-      property: "scale",
-      from: "1 1 1",
-      to: "1.2 1.2 1.2",
-      dur: 200,
-      dir: "alternate",
-      easing: "easeInOutQuad",
-    });
-
-    // Trigger haptic feedback
+    // Sin animaciones de click - solo retroalimentación háptica
     this.triggerHapticFeedback();
 
-    // Custom click handler - add your logic here
+    // Manejador de click personalizado - agrega tu lógica aquí
     this.handleCustomClick();
   }
 
   handleCustomClick() {
-    // Add your custom click logic here
-    // For example: change overlay image, play sound, navigate to URL, etc.
-    console.log("Custom click handler - add your logic here");
+    // Agrega tu lógica de click personalizada aquí
+    // Por ejemplo: cambiar imagen overlay, reproducir sonido, navegar a URL, etc.
+    console.log("Manejador de click personalizado - agrega tu lógica aquí");
   }
 
   triggerHapticFeedback() {
@@ -164,35 +126,35 @@ class ARImageTracker {
   }
 
   handleOrientationChange() {
-    // Restart AR after orientation change
+    // Reiniciar AR después del cambio de orientación
     setTimeout(() => {
       if (this.scene && this.scene.components["mindar-image"]) {
-        console.log("Handling orientation change...");
-        // The MindAR library should handle this automatically
+        console.log("Manejando cambio de orientación...");
+        // La librería MindAR debería manejar esto automáticamente
       }
     }, 500);
   }
 
   handleVisibilityChange() {
     if (document.hidden) {
-      console.log("App hidden - pausing AR");
+      console.log("App oculta - pausando AR");
       this.pauseAR();
     } else {
-      console.log("App visible - resuming AR");
+      console.log("App visible - reanudando AR");
       this.resumeAR();
     }
   }
 
   pauseAR() {
     if (this.scene && this.scene.components["mindar-image"]) {
-      // Pause AR processing to save battery
+      // Pausar procesamiento AR para ahorrar batería
       this.scene.components["mindar-image"].pause();
     }
   }
 
   resumeAR() {
     if (this.scene && this.scene.components["mindar-image"]) {
-      // Resume AR processing
+      // Reanudar procesamiento AR
       this.scene.components["mindar-image"].unpause();
     }
   }
@@ -226,9 +188,9 @@ class ARImageTracker {
   }
 }
 
-// Utility functions
+// Funciones de utilidad
 const Utils = {
-  // Check if device supports AR
+  // Verificar si el dispositivo soporta AR
   checkARSupport() {
     return new Promise((resolve) => {
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -245,7 +207,7 @@ const Utils = {
     });
   },
 
-  // Check device capabilities
+  // Verificar capacidades del dispositivo
   getDeviceInfo() {
     return {
       isMobile:
@@ -266,33 +228,33 @@ const Utils = {
   },
 };
 
-// Initialize the AR application when DOM is loaded
+// Inicializar la aplicación AR cuando el DOM esté cargado
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("MathiasXR - Starting AR Image Tracking Application");
+  console.log("MathiasXR - Iniciando Aplicación de Seguimiento de Imágenes AR");
 
-  // Check device capabilities
+  // Verificar capacidades del dispositivo
   const deviceInfo = Utils.getDeviceInfo();
-  console.log("Device Info:", deviceInfo);
+  console.log("Información del dispositivo:", deviceInfo);
 
   if (!deviceInfo.supportsWebGL) {
-    console.error("WebGL not supported");
+    console.error("WebGL no soportado");
     document.querySelector("#error").innerHTML =
-      "<p>Your device does not support WebGL, which is required for AR.</p>";
+      "<p>Tu dispositivo no soporta WebGL, que es requerido para AR.</p>";
     document.querySelector("#error").style.display = "flex";
     return;
   }
 
-  // Check AR support
+  // Verificar soporte AR
   Utils.checkARSupport().then((supported) => {
     if (!supported) {
-      console.warn("Camera access not available");
+      console.warn("Acceso a cámara no disponible");
       document.querySelector("#error").innerHTML =
-        "<p>Camera access is required for AR. Please allow camera permissions and refresh.</p>";
+        "<p>Se requiere acceso a la cámara para AR. Por favor permite los permisos de cámara y actualiza.</p>";
       document.querySelector("#error").style.display = "flex";
       return;
     }
 
-    // Initialize AR application
+    // Inicializar aplicación AR
     window.arApp = new ARImageTracker();
   });
 });

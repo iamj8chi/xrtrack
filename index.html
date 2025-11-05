@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MathiasXR - AR Image Tracking</title>
+    <title>Huellas de la memoria de un Cinero</title>
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
     <link rel="stylesheet" href="styles.css" />
@@ -11,7 +11,7 @@
   <body>
     <div id="loading-screen">
       <div class="loading-spinner"></div>
-      <p>Loading AR Experience...</p>
+      <p>Cargando Experiencia AR...</p>
     </div>
 
     <a-scene
@@ -50,7 +50,6 @@
           rotation="0 0 0"
           transparent="true"
           material="alphaTest: 0.5"
-          animation="property: rotation; to: 0 360 0; dur: 5000; loop: true"
         >
         </a-plane>
       </a-entity>
@@ -59,16 +58,16 @@
     <!-- UI Elements -->
     <div id="scanning" class="ui-overlay">
       <div class="scanning-animation"></div>
-      <p>Point your camera at the target image</p>
+      <p>Apunta tu cámara hacia la imagen objetivo</p>
     </div>
 
     <div id="loading" class="ui-overlay">
       <div class="loading-spinner"></div>
-      <p>Loading...</p>
+      <p>Cargando...</p>
     </div>
 
     <div id="error" class="ui-overlay error">
-      <p>Failed to start AR. Please check your camera permissions.</p>
+      <p>Error al iniciar AR. Por favor verifica los permisos de cámara.</p>
     </div>
 
     <script src="app.js"></script>
