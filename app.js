@@ -89,7 +89,7 @@ class ARImageTracker {
       overlayPlane.removeAttribute("animation__rotation");
       overlayPlane.removeAttribute("animation__click");
       overlayPlane.removeAttribute("animation__scale");
-      
+
       // Mostrar la imagen directamente sin animaciones
       overlayPlane.setAttribute("scale", "1 1 1");
       overlayPlane.setAttribute("rotation", "0 0 0");
@@ -108,7 +108,7 @@ class ARImageTracker {
       overlayPlane.removeAttribute("animation__rotation");
       overlayPlane.removeAttribute("animation__click");
       overlayPlane.removeAttribute("animation__scale");
-      
+
       // Ocultar la imagen directamente sin animaciones
       overlayPlane.setAttribute("scale", "0 0 0");
     }
