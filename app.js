@@ -33,6 +33,17 @@ class ARImageTracker {
     this.scene = document.querySelector("a-scene");
     this.targetEntity = document.querySelector("#target-entity");
     const overlayPlane = document.querySelector("#overlay-plane");
+    
+    // Verificar que la imagen se carga correctamente
+    const overlayImage = document.querySelector("#overlay-image");
+    if (overlayImage) {
+      overlayImage.onload = () => {
+        console.log("✅ Imagen overlay cargada correctamente:", overlayImage.src);
+      };
+      overlayImage.onerror = () => {
+        console.error("❌ Error al cargar imagen overlay:", overlayImage.src);
+      };
+    }
 
     // Eventos MindAR
     this.scene.addEventListener("arReady", () => {
@@ -82,6 +93,7 @@ class ARImageTracker {
 
   onTargetFound() {
     const overlayPlane = document.querySelector("#overlay-plane");
+    console.log("¡Objetivo detectado! Mostrando imagen overlay...");
 
     if (overlayPlane) {
       // Remover cualquier animación existente
@@ -93,6 +105,11 @@ class ARImageTracker {
       // Mostrar la imagen directamente sin animaciones
       overlayPlane.setAttribute("scale", "1 1 1");
       overlayPlane.setAttribute("rotation", "0 0 0");
+      overlayPlane.setAttribute("visible", "true");
+      
+      console.log("Imagen overlay configurada - escala: 1 1 1, visible: true");
+    } else {
+      console.error("No se encontró el elemento overlay-plane!");
     }
 
     // Activar retroalimentación háptica si está disponible
@@ -101,6 +118,7 @@ class ARImageTracker {
 
   onTargetLost() {
     const overlayPlane = document.querySelector("#overlay-plane");
+    console.log("¡Objetivo perdido! Ocultando imagen overlay...");
 
     if (overlayPlane) {
       // Remover cualquier animación existente
@@ -111,6 +129,9 @@ class ARImageTracker {
 
       // Ocultar la imagen directamente sin animaciones
       overlayPlane.setAttribute("scale", "0 0 0");
+      overlayPlane.setAttribute("visible", "false");
+      
+      console.log("Imagen overlay ocultada");
     }
   }
 
