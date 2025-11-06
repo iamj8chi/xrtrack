@@ -31,22 +31,35 @@ class ARImageTracker {
 
   setupEventListeners() {
     this.scene = document.querySelector("a-scene");
-    this.targetEntity = document.querySelector("#target-entity");
-    const overlayPlane = document.querySelector("#overlay-plane");
 
-    // Verificar que la imagen se carga correctamente
-    const overlayImage = document.querySelector("#overlay-image");
-    if (overlayImage) {
-      overlayImage.onload = () => {
-        console.log(
-          "✅ Imagen overlay cargada correctamente:",
-          overlayImage.src
-        );
-      };
-      overlayImage.onerror = () => {
-        console.error("❌ Error al cargar imagen overlay:", overlayImage.src);
-      };
-    }
+    // Configurar múltiples objetivos
+    this.targetEntities = [
+      document.querySelector("#target-entity-1"),
+      document.querySelector("#target-entity-2"),
+    ];
+
+    // Verificar que las imágenes se cargan correctamente
+    const overlayImages = [
+      document.querySelector("#overlay-image-1"),
+      document.querySelector("#overlay-image-2"),
+    ];
+
+    overlayImages.forEach((overlayImage, index) => {
+      if (overlayImage) {
+        overlayImage.onload = () => {
+          console.log(
+            `✅ Imagen overlay ${index + 1} cargada correctamente:`,
+            overlayImage.src
+          );
+        };
+        overlayImage.onerror = () => {
+          console.error(
+            `❌ Error al cargar imagen overlay ${index + 1}:`,
+            overlayImage.src
+          );
+        };
+      }
+    });
 
     // Eventos MindAR
     this.scene.addEventListener("arReady", () => {
@@ -60,26 +73,39 @@ class ARImageTracker {
       this.showUIElement("#error");
     });
 
-    // Eventos de seguimiento de objetivo
-    this.targetEntity.addEventListener("targetFound", () => {
-      console.log("¡Objetivo encontrado!");
-      this.targetFound = true;
-      this.hideUIElement("#scanning");
-      this.onTargetFound();
+    // Eventos de seguimiento de múltiples objetivos
+    this.targetEntities.forEach((targetEntity, index) => {
+      if (targetEntity) {
+        targetEntity.addEventListener("targetFound", () => {
+          console.log(`¡Objetivo ${index + 1} encontrado!`);
+          this.targetFound = true;
+          this.hideUIElement("#scanning");
+          this.onTargetFound(index);
+        });
+
+        targetEntity.addEventListener("targetLost", () => {
+          console.log(`¡Objetivo ${index + 1} perdido!`);
+          this.targetFound = false;
+          this.showUIElement("#scanning");
+          this.onTargetLost(index);
+        });
+      }
     });
 
-    this.targetEntity.addEventListener("targetLost", () => {
-      console.log("¡Objetivo perdido!");
-      this.targetFound = false;
-      this.showUIElement("#scanning");
-      this.onTargetLost();
-    });
+    // Add click interactions to overlays
+    const overlayPlanes = [
+      document.querySelector("#overlay-plane-1"),
+      document.querySelector("#overlay-plane-2"),
+    ];
 
-    // Add click interaction to overlay
-    if (overlayPlane) {
-      overlayPlane.classList.add("clickable");
-      overlayPlane.addEventListener("click", this.onOverlayClick.bind(this));
-    }
+    overlayPlanes.forEach((overlayPlane, index) => {
+      if (overlayPlane) {
+        overlayPlane.classList.add("clickable");
+        overlayPlane.addEventListener("click", () =>
+          this.onOverlayClick(index)
+        );
+      }
+    });
 
     // Handle orientation changes
     window.addEventListener(
@@ -94,9 +120,13 @@ class ARImageTracker {
     );
   }
 
-  onTargetFound() {
-    const overlayPlane = document.querySelector("#overlay-plane");
-    console.log("¡Objetivo detectado! Mostrando imagen overlay...");
+  onTargetFound(targetIndex) {
+    const overlayPlane = document.querySelector(
+      `#overlay-plane-${targetIndex + 1}`
+    );
+    console.log(
+      `¡Objetivo ${targetIndex + 1} detectado! Mostrando imagen overlay...`
+    );
 
     if (overlayPlane) {
       // Remover cualquier animación existente
@@ -110,18 +140,28 @@ class ARImageTracker {
       overlayPlane.setAttribute("rotation", "0 0 0");
       overlayPlane.setAttribute("visible", "true");
 
-      console.log("Imagen overlay configurada - escala: 1 1 1, visible: true");
+      console.log(
+        `Imagen overlay ${
+          targetIndex + 1
+        } configurada - escala: 1 1 1, visible: true`
+      );
     } else {
-      console.error("No se encontró el elemento overlay-plane!");
+      console.error(
+        `No se encontró el elemento overlay-plane-${targetIndex + 1}!`
+      );
     }
 
     // Activar retroalimentación háptica si está disponible
     this.triggerHapticFeedback();
   }
 
-  onTargetLost() {
-    const overlayPlane = document.querySelector("#overlay-plane");
-    console.log("¡Objetivo perdido! Ocultando imagen overlay...");
+  onTargetLost(targetIndex) {
+    const overlayPlane = document.querySelector(
+      `#overlay-plane-${targetIndex + 1}`
+    );
+    console.log(
+      `¡Objetivo ${targetIndex + 1} perdido! Ocultando imagen overlay...`
+    );
 
     if (overlayPlane) {
       // Remover cualquier animación existente
@@ -134,16 +174,18 @@ class ARImageTracker {
       overlayPlane.setAttribute("scale", "0 0 0");
       overlayPlane.setAttribute("visible", "false");
 
-      console.log("Imagen overlay ocultada");
+      console.log(`Imagen overlay ${targetIndex + 1} ocultada`);
     }
   }
 
-  onOverlayClick() {
+  onOverlayClick(targetIndex) {
     if (!this.targetFound) return;
 
-    console.log("¡Overlay clickeado!");
+    console.log(`¡Overlay ${targetIndex + 1} clickeado!`);
 
-    const overlayPlane = document.querySelector("#overlay-plane");
+    const overlayPlane = document.querySelector(
+      `#overlay-plane-${targetIndex + 1}`
+    );
     if (overlayPlane) {
       // Asegurarse de que no hay animaciones al hacer click
       overlayPlane.removeAttribute("animation");
@@ -156,13 +198,17 @@ class ARImageTracker {
     this.triggerHapticFeedback();
 
     // Manejador de click personalizado - agrega tu lógica aquí
-    this.handleCustomClick();
+    this.handleCustomClick(targetIndex);
   }
 
-  handleCustomClick() {
+  handleCustomClick(targetIndex) {
     // Agrega tu lógica de click personalizada aquí
     // Por ejemplo: cambiar imagen overlay, reproducir sonido, navegar a URL, etc.
-    console.log("Manejador de click personalizado - agrega tu lógica aquí");
+    console.log(
+      `Manejador de click personalizado para objetivo ${
+        targetIndex + 1
+      } - agrega tu lógica aquí`
+    );
   }
 
   triggerHapticFeedback() {
