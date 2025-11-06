@@ -1,4 +1,122 @@
 // MathiasXR - Aplicación de Seguimiento de Imágenes AR
+
+// Smoothing and tracking optimization
+class TrackingSmoothing {
+  constructor(smoothingFactor = 0.8) {
+    this.smoothingFactor = smoothingFactor;
+    this.lastPosition = { x: 0, y: 0, z: 0 };
+    this.lastRotation = { x: 0, y: 0, z: 0 };
+    this.lastScale = { x: 1, y: 1, z: 1 };
+    this.isFirstFrame = true;
+  }
+
+  smoothTransform(entity, newTransform) {
+    if (this.isFirstFrame) {
+      this.lastPosition = newTransform.position || this.lastPosition;
+      this.lastRotation = newTransform.rotation || this.lastRotation;
+      this.lastScale = newTransform.scale || this.lastScale;
+      this.isFirstFrame = false;
+      return;
+    }
+
+    // Smooth position
+    if (newTransform.position) {
+      this.lastPosition.x = this.lerp(
+        this.lastPosition.x,
+        newTransform.position.x,
+        this.smoothingFactor
+      );
+      this.lastPosition.y = this.lerp(
+        this.lastPosition.y,
+        newTransform.position.y,
+        this.smoothingFactor
+      );
+      this.lastPosition.z = this.lerp(
+        this.lastPosition.z,
+        newTransform.position.z,
+        this.smoothingFactor
+      );
+      entity.setAttribute(
+        "position",
+        `${this.lastPosition.x} ${this.lastPosition.y} ${this.lastPosition.z}`
+      );
+    }
+
+    // Smooth rotation
+    if (newTransform.rotation) {
+      this.lastRotation.x = this.lerp(
+        this.lastRotation.x,
+        newTransform.rotation.x,
+        this.smoothingFactor
+      );
+      this.lastRotation.y = this.lerp(
+        this.lastRotation.y,
+        newTransform.rotation.y,
+        this.smoothingFactor
+      );
+      this.lastRotation.z = this.lerp(
+        this.lastRotation.z,
+        newTransform.rotation.z,
+        this.smoothingFactor
+      );
+      entity.setAttribute(
+        "rotation",
+        `${this.lastRotation.x} ${this.lastRotation.y} ${this.lastRotation.z}`
+      );
+    }
+
+    // Smooth scale
+    if (newTransform.scale) {
+      this.lastScale.x = this.lerp(
+        this.lastScale.x,
+        newTransform.scale.x,
+        this.smoothingFactor
+      );
+      this.lastScale.y = this.lerp(
+        this.lastScale.y,
+        newTransform.scale.y,
+        this.smoothingFactor
+      );
+      this.lastScale.z = this.lerp(
+        this.lastScale.z,
+        newTransform.scale.z,
+        this.smoothingFactor
+      );
+      entity.setAttribute(
+        "scale",
+        `${this.lastScale.x} ${this.lastScale.y} ${this.lastScale.z}`
+      );
+    }
+  }
+
+  lerp(a, b, t) {
+    return a + (b - a) * t;
+  }
+
+  reset() {
+    this.isFirstFrame = true;
+  }
+}
+
+// Initialize smoothing for both targets
+const smoothing1 = new TrackingSmoothing(0.7);
+const smoothing2 = new TrackingSmoothing(0.7);
+
+// Tracking state management
+let trackingStates = {
+  target1: { isTracking: false, confidence: 0, framesSinceDetection: 0 },
+  target2: { isTracking: false, confidence: 0, framesSinceDetection: 0 },
+};
+
+// Optimized tracking parameters
+const TRACKING_CONFIG = {
+  minConfidenceThreshold: 0.3,
+  stabilityFrames: 3,
+  lossToleranceFrames: 8,
+  smoothingIntensity: 0.7,
+  scaleStabilization: true,
+};
+
 class ARImageTracker {
   constructor() {
     this.isInitialized = false;
@@ -121,34 +239,53 @@ class ARImageTracker {
   }
 
   onTargetFound(targetIndex) {
+    const targetState =
+      targetIndex === 0 ? trackingStates.target1 : trackingStates.target2;
     const overlayPlane = document.querySelector(
       `#overlay-plane-${targetIndex + 1}`
     );
-    console.log(
-      `¡Objetivo ${targetIndex + 1} detectado! Mostrando imagen overlay...`
+    const smoothWrapper = document.querySelector(
+      `#smooth-wrapper-${targetIndex + 1}`
     );
 
-    if (overlayPlane) {
-      // Remover cualquier animación existente
-      overlayPlane.removeAttribute("animation");
-      overlayPlane.removeAttribute("animation__rotation");
-      overlayPlane.removeAttribute("animation__click");
-      overlayPlane.removeAttribute("animation__scale");
+    if (!overlayPlane) {
+      console.error(
+        `❌ Elemento overlay-plane-${targetIndex + 1} no encontrado`
+      );
+      return;
+    }
 
-      // Mostrar la imagen directamente sin animaciones
-      overlayPlane.setAttribute("scale", "1 1 1");
-      overlayPlane.setAttribute("rotation", "0 0 0");
-      overlayPlane.setAttribute("visible", "true");
+    // Reset frame counter and update state
+    targetState.framesSinceDetection = 0;
+    targetState.confidence = 1.0;
+
+    // Only show if not already tracking (prevents flickering)
+    if (!targetState.isTracking) {
+      targetState.isTracking = true;
 
       console.log(
-        `Imagen overlay ${
-          targetIndex + 1
-        } configurada - escala: 1 1 1, visible: true`
+        `🎯 Objetivo ${targetIndex + 1} detectado con estabilización`
       );
-    } else {
-      console.error(
-        `No se encontró el elemento overlay-plane-${targetIndex + 1}!`
-      );
+
+      // Smooth appearance transition
+      overlayPlane.setAttribute("visible", true);
+      overlayPlane.removeAttribute("animation__fadeout");
+      overlayPlane.setAttribute("animation__fadein", {
+        property: "material.opacity",
+        from: 0,
+        to: 1,
+        dur: 200,
+        easing: "easeOutQuad",
+      });
+
+      // Apply scale stabilization
+      if (TRACKING_CONFIG.scaleStabilization) {
+        overlayPlane.setAttribute("scale", "1 1 1");
+      }
+
+      // Reset smoothing for this target
+      if (targetIndex === 0) smoothing1.reset();
+      else smoothing2.reset();
     }
 
     // Activar retroalimentación háptica si está disponible
@@ -156,25 +293,47 @@ class ARImageTracker {
   }
 
   onTargetLost(targetIndex) {
+    const targetState =
+      targetIndex === 0 ? trackingStates.target1 : trackingStates.target2;
     const overlayPlane = document.querySelector(
       `#overlay-plane-${targetIndex + 1}`
     );
-    console.log(
-      `¡Objetivo ${targetIndex + 1} perdido! Ocultando imagen overlay...`
-    );
 
-    if (overlayPlane) {
-      // Remover cualquier animación existente
-      overlayPlane.removeAttribute("animation");
-      overlayPlane.removeAttribute("animation__rotation");
-      overlayPlane.removeAttribute("animation__click");
-      overlayPlane.removeAttribute("animation__scale");
+    if (!overlayPlane) return;
 
-      // Ocultar la imagen directamente sin animaciones
-      overlayPlane.setAttribute("scale", "0 0 0");
-      overlayPlane.setAttribute("visible", "false");
+    targetState.framesSinceDetection++;
+    targetState.confidence = Math.max(0, targetState.confidence - 0.1);
 
-      console.log(`Imagen overlay ${targetIndex + 1} ocultada`);
+    // Only hide after tolerance period to reduce jitter
+    if (
+      targetState.framesSinceDetection >= TRACKING_CONFIG.lossToleranceFrames
+    ) {
+      if (targetState.isTracking) {
+        targetState.isTracking = false;
+
+        console.log(
+          `❌ Objetivo ${targetIndex + 1} perdido después de ${
+            TRACKING_CONFIG.lossToleranceFrames
+          } frames`
+        );
+
+        // Smooth disappearance transition
+        overlayPlane.removeAttribute("animation__fadein");
+        overlayPlane.setAttribute("animation__fadeout", {
+          property: "material.opacity",
+          from: 1,
+          to: 0,
+          dur: 300,
+          easing: "easeOutQuad",
+        });
+
+        // Hide after animation completes
+        setTimeout(() => {
+          if (!targetState.isTracking) {
+            overlayPlane.setAttribute("visible", false);
+          }
+        }, 300);
+      }
     }
   }
 
@@ -320,9 +479,38 @@ const Utils = {
   },
 };
 
+// Performance monitoring and optimization
+let frameCount = 0;
+let lastFPSCheck = Date.now();
+
+function monitorPerformance() {
+  frameCount++;
+  const now = Date.now();
+
+  if (now - lastFPSCheck > 1000) {
+    // Check every second
+    const fps = frameCount;
+    frameCount = 0;
+    lastFPSCheck = now;
+
+    // Adjust smoothing based on performance
+    if (fps < 20) {
+      TRACKING_CONFIG.smoothingIntensity = 0.5; // Less smoothing for better performance
+      console.log("⚡ Rendimiento bajo detectado, reduciendo suavizado");
+    } else if (fps > 50) {
+      TRACKING_CONFIG.smoothingIntensity = 0.8; // More smoothing for better quality
+    }
+  }
+
+  requestAnimationFrame(monitorPerformance);
+}
+
 // Inicializar la aplicación AR cuando el DOM esté cargado
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("MathiasXR - Iniciando Aplicación de Seguimiento de Imágenes AR");
+  console.log("Iniciando con optimizaciones de tracking...");
+
+  // Start performance monitoring
+  monitorPerformance();
 
   // Verificar capacidades del dispositivo
   const deviceInfo = Utils.getDeviceInfo();

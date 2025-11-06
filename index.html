@@ -19,9 +19,13 @@
                       showStats: false; 
                       uiScanning: #scanning; 
                       uiLoading: #loading; 
-                      uiError: #error"
+                      uiError: #error;
+                      filterMinCF: 0.0001;
+                      filterBeta: 0.001;
+                      warmupTolerance: 5;
+                      missTolerance: 5"
       color-space="sRGB"
-      renderer="colorManagement: true, physicallyCorrectLights"
+      renderer="colorManagement: true, physicallyCorrectLights, antialias: true"
       vr-mode-ui="enabled: false"
       device-orientation-permission-ui="enabled: false"
     >
@@ -41,36 +45,42 @@
 
       <!-- AR Target Entity 1 -->
       <a-entity id="target-entity-1" mindar-image-target="targetIndex: 0">
-        <!-- PNG Overlay 1 -->
-        <a-plane
-          id="overlay-plane-1"
-          src="#overlay-image-1"
-          position="0 0 0"
-          height="1.415"
-          width="1"
-          scale="1 1 1"
-          rotation="0 0 0"
-          transparent="true"
-          material="alphaTest: 0.5"
-        >
-        </a-plane>
+        <!-- Smoothing wrapper -->
+        <a-entity id="smooth-wrapper-1">
+          <!-- PNG Overlay 1 -->
+          <a-plane
+            id="overlay-plane-1"
+            src="#overlay-image-1"
+            position="0 0 0"
+            height="1.415"
+            width="1"
+            scale="1 1 1"
+            rotation="0 0 0"
+            transparent="true"
+            material="alphaTest: 0.5"
+          >
+          </a-plane>
+        </a-entity>
       </a-entity>
 
       <!-- AR Target Entity 2 -->
       <a-entity id="target-entity-2" mindar-image-target="targetIndex: 1">
-        <!-- PNG Overlay 2 -->
-        <a-plane
-          id="overlay-plane-2"
-          src="#overlay-image-2"
-          position="0 0 0"
-          height="1.769"
-          width="1"
-          scale="1 1 1"
-          rotation="0 0 0"
-          transparent="true"
-          material="alphaTest: 0.5"
-        >
-        </a-plane>
+        <!-- Smoothing wrapper -->
+        <a-entity id="smooth-wrapper-2">
+          <!-- PNG Overlay 2 -->
+          <a-plane
+            id="overlay-plane-2"
+            src="#overlay-image-2"
+            position="0 0 0"
+            height="1.769"
+            width="1"
+            scale="1 1 1"
+            rotation="0 0 0"
+            transparent="true"
+            material="alphaTest: 0.5"
+          >
+          </a-plane>
+        </a-entity>
       </a-entity>
     </a-scene>
 
