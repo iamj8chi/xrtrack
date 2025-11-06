@@ -1,4 +1,4 @@
-## MathiasXR - AR Image Tracking Project
+## XRTracker - AR Image Tracking Project
 
 This is an AR project using the MindAR library for image tracking and displaying PNG overlays.
 
